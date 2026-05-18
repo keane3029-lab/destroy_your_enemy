@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>💥 DESTROY YOUR ENEMY 💥</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 
@@ -12,7 +13,7 @@
         <h1 class="game-title">💥 DESTROY YOUR ENEMY 💥</h1>
         
         <div class="stage-info">
-            STAGE <span id="stage-num">1</span>: <span id="enemy-name">Training Dummy</span>
+            STAGE <span id="stage-num">1</span>: <span id="enemy-name">3D Training Glitch</span>
         </div>
 
         <div class="input-wrapper">
@@ -24,18 +25,7 @@
             <div class="health-text"><span id="current-hp">100</span> / <span id="max-hp">100</span> HP</div>
         </div>
 
-        <div class="scene3d">
-            <div class="cube3d" id="enemy-cube">
-                <div class="cube-face face-front">
-                    <img src="https://images.unsplash.com/photo-1560942485-b2a11cc13456?w=400" alt="3D Enemy Target" id="enemy-img">
-                </div>
-                <div class="cube-face face-back"></div>
-                <div class="cube-face face-left"></div>
-                <div class="cube-face face-right"></div>
-                <div class="cube-face face-top"></div>
-                <div class="cube-face face-bottom"></div>
-            </div>
-        </div>
+        <div id="canvas3d-container"></div>
 
         <div class="gold-display">💰 Gold: <span id="gold-count">0</span></div>
         <div class="dps-display">⚔️ DPS: <span id="dps-count">0</span></div>
