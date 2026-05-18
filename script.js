@@ -1,23 +1,23 @@
-// Game variables
+// Internal Engine Scopes
 let stage = 1;
 let gold = 0;
 let currentDPS = 0;
-
 let maxHP = 100;
 let currentHP = 100;
 
 let weaponCounts = { w1: 0, w2: 0, w3: 0 };
 
-const enemyNames = ["Goblin Grunt", "Orc Raider", "Dark Knight", "Shadow Drake", "Corrupted Behemoth"];
+// Baseline Stage Progression Array
+const defaultEnemyNames = ["Alpha Dummy", "Beta Sentinel", "Gamma Core", "Omega Titan", "Overlord Prime"];
 const enemyImages = [
-    "https://images.unsplash.com/photo-1560942485-b2a11cc13456?w=400", // Scarecrow/Monster theme
-    "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=400", // Anime villain style
-    "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=400", // Dark abstract entity
-    "https://images.unsplash.com/photo-1519074002996-a69e7ac46a42?w=400", // Deep fire look
-    "https://images.unsplash.com/photo-1509248961158-e54f6934749c?w=400"  // Cyber devil look
+    "https://images.unsplash.com/photo-1560942485-b2a11cc13456?w=400",
+    "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=400",
+    "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=400",
+    "https://images.unsplash.com/photo-1519074002996-a69e7ac46a42?w=400",
+    "https://images.unsplash.com/photo-1509248961158-e54f6934749c?w=400"
 ];
 
-// UI Connections
+// Document Bindings
 const hpBar = document.getElementById('hp-bar');
 const currentHPEl = document.getElementById('current-hp');
 const maxHPEl = document.getElementById('max-hp');
@@ -26,13 +26,35 @@ const dpsEl = document.getElementById('dps-count');
 const stageEl = document.getElementById('stage-num');
 const nameEl = document.getElementById('enemy-name');
 const enemyImg = document.getElementById('enemy-img');
-const enemyBox = document.getElementById('enemy-box');
+const enemyCube = document.getElementById('enemy-cube');
+const enemyNameInput = document.getElementById('enemy-name-input');
 
-// Main Player Click Attack
-if (enemyImg) {
-    enemyImg.addEventListener('mousedown', (e) => {
-        dealDamage(1); // Deals 1 damage per click
-        triggerImpactVisuals(e);
+// Sound Variable
+let audioCtx = null;
+function initAudio() {
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+}
+
+// Custom Input Field Event Watcher
+if (enemyNameInput && nameEl) {
+    enemyNameInput.addEventListener('input', (e) => {
+        const val = e.target.value.trim();
+        if (val === "") {
+            const index = (stage - 1) % defaultEnemyNames.length;
+            nameEl.textContent = defaultEnemyNames[index];
+        } else {
+            nameEl.textContent = val;
+        }
+    });
+}
+
+// Mechanical Clicks
+if (enemyCube) {
+    enemyCube.addEventListener('mousedown', (e) => {
+        dealDamage(1); 
+        trigger3DImpact(e);
     });
 }
 
@@ -45,48 +67,67 @@ function dealDamage(amount) {
     updateUI();
 }
 
-function triggerImpactVisuals(e) {
-    if (!enemyImg || !enemyBox) return;
+function trigger3DImpact(e) {
+    if (!enemyCube) return;
 
-    // Shake the image box container
-    enemyBox.classList.add('shake');
-    enemyImg.style.transform = 'scale(0.93)';
-    enemyImg.style.filter = 'brightness(1.5) sepia(1) hue-rotate(-50deg)'; // Flashes dangerous red tint
+    enemyCube.classList.add('cube-hit');
 
-    setTimeout(() => {
-        enemyBox.classList.remove('shake');
-        enemyImg.style.transform = 'scale(1)';
-        enemyImg.style.filter = 'none';
-    }, 100);
-
-    // Spawn floating damage hit text
+    // Project floating number metrics inside the scene
     if (e) {
-        const rect = enemyBox.getBoundingClientRect();
+        const rect = enemyCube.getBoundingClientRect();
         const pop = document.createElement('div');
         pop.className = 'damage-pop';
-        pop.textContent = `-1`;
+        pop.textContent = `-1 HP`;
         pop.style.left = `${e.clientX - rect.left}px`;
         pop.style.top = `${e.clientY - rect.top}px`;
-        enemyBox.appendChild(pop);
+        enemyCube.appendChild(pop);
         setTimeout(() => pop.remove(), 400);
     }
+
+    playHitNoise();
+
+    setTimeout(() => {
+        enemyCube.classList.remove('cube-hit');
+    }, 100);
+}
+
+function playHitNoise() {
+    initAudio();
+    if (!audioCtx) return;
+    try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(130 + Math.random() * 40, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.7, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.1);
+    } catch(err){}
 }
 
 function enemyDefeated() {
-    // Reward Gold based on stage difficulty
     const reward = stage * 10;
     gold += reward;
 
-    // Level up system: Advance stage and ramp up enemy health scaling
     stage++;
     maxHP = Math.floor(100 * Math.pow(1.3, stage - 1));
     currentHP = maxHP;
 
-    // Cycle enemy names/pics or loop them if player passes stage 5
-    const enemyIndex = (stage - 1) % enemyNames.length;
-    if (nameEl) nameEl.textContent = enemyNames[enemyIndex];
-    if (enemyImg) enemyImg.src = enemyImages[enemyIndex];
+    // Reset or preserve target name context depending on text inputs
     if (stageEl) stageEl.textContent = stage;
+    
+    const index = (stage - 1) % defaultEnemyNames.length;
+    if (enemyImg) enemyImg.src = enemyImages[index];
+    
+    if (enemyNameInput && enemyNameInput.value.trim() !== "") {
+        // Keeps user's typed name intact across runs
+        if (nameEl) nameEl.textContent = enemyNameInput.value.trim();
+    } else {
+        if (nameEl) nameEl.textContent = defaultEnemyNames[index];
+    }
 }
 
 function updateUI() {
@@ -100,7 +141,6 @@ function updateUI() {
     updateShopButtons();
 }
 
-// Universal Global Shop Logic
 window.buyWeapon = function(dpsValue, baseCost, countId, btnId) {
     const weaponKey = btnId.replace('btn-', '');
     const currentOwned = weaponCounts[weaponKey];
@@ -136,12 +176,11 @@ function updateShopButtons() {
     }
 }
 
-// Game Core Clock Loop (Handles Automated Passive Damage)
+// Processing Loops
 setInterval(() => {
     if (currentDPS > 0) {
         dealDamage(currentDPS);
     }
 }, 1000);
 
-// Run baseline evaluations
 updateUI();
