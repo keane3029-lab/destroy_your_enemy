@@ -1,0 +1,188 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    user-select: none;
+}
+
+body {
+    background: radial-gradient(circle, #1a0b2e 0%, #080214 100%);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 10px;
+    min-height: 100vh;
+}
+
+.game-container {
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+}
+
+.game-title {
+    font-size: 2.2rem;
+    color: #ff3e3e;
+    text-shadow: 0 0 15px rgba(255, 62, 62, 0.6);
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+.stage-info {
+    font-size: 1.2rem;
+    color: #ffb834;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* HEALTH BAR SYSTEM */
+.health-bar-container {
+    width: 100%;
+    height: 30px;
+    background-color: #220b11;
+    border: 3px solid #ff3e3e;
+    border-radius: 15px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 25px;
+    box-shadow: 0 0 10px rgba(255, 62, 62, 0.3);
+}
+
+.health-bar-fill {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #b80000, #ff2a2a);
+    transition: width 0.05s linear;
+}
+
+.health-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+    text-shadow: 1px 1px 3px #000;
+    font-size: 1rem;
+}
+
+/* THE ENEMY CLICK ZONE */
+.enemy-wrapper {
+    width: 240px;
+    height: 240px;
+    margin: 0 auto 20px;
+    position: relative;
+    cursor: pointer;
+}
+
+.enemy-sprite {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 5px solid #ffb834;
+    object-fit: cover;
+    box-shadow: 0 0 25px rgba(255, 184, 52, 0.4);
+    transition: transform 0.05s ease;
+}
+
+/* DAMAGE AND GOLD TEXT */
+.gold-display {
+    font-size: 1.6rem;
+    color: #ffd700;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+}
+
+.dps-display {
+    font-size: 1.1rem;
+    color: #00e5ff;
+    margin-top: 5px;
+    margin-bottom: 30px;
+}
+
+/* THE SHOP PANEL */
+.shop-container {
+    max-width: 500px;
+    width: 100%;
+    background: rgba(20, 10, 35, 0.8);
+    border: 2px solid #3d1d6d;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.shop-container h2 {
+    color: #00e5ff;
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #3d1d6d;
+    padding-bottom: 5px;
+}
+
+.shop-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.shop-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.04);
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.shop-btn {
+    background: #ffb834;
+    color: #000;
+    border: none;
+    padding: 8px 16px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    min-width: 90px;
+}
+
+.shop-btn:disabled {
+    background: #444;
+    color: #888;
+    cursor: not-allowed;
+}
+
+/* SHAKE ANIMATION WHEN DAMAGED */
+.shake {
+    animation: hitShake 0.1s linear infinite;
+}
+
+@keyframes hitShake {
+    0% { transform: translate(2px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(0px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(2px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(2px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+/* COMBAT FLOATING NUMBERS */
+.damage-pop {
+    position: absolute;
+    color: #ff3e3e;
+    font-weight: 900;
+    font-size: 1.5rem;
+    text-shadow: 2px 2px 0px #000;
+    pointer-events: none;
+    animation: floatUpOut 0.4s ease-out forwards;
+}
+
+@keyframes floatUpOut {
+    0% { transform: translateY(0) scale(1.2); opacity: 1; }
+    100% { transform: translateY(-60px) scale(0.8); opacity: 0; }
+}

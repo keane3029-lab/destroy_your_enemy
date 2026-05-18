@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💥 DESTROY YOUR ENEMY 💥</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="game-container">
+        <h1 class="game-title">💥 DESTROY YOUR ENEMY 💥</h1>
+        
+        <div class="stage-info">
+            STAGE <span id="stage-num">1</span>: <span id="enemy-name">Goblin Grunt</span>
+        </div>
+
+        <div class="health-bar-container">
+            <div class="health-bar-fill" id="hp-bar"></div>
+            <div class="health-text"><span id="current-hp">100</span> / <span id="max-hp">100</span> HP</div>
+        </div>
+
+        <div class="enemy-wrapper" id="enemy-box">
+            <img src="https://images.unsplash.com/photo-1560942485-b2a11cc13456?w=400" alt="The Enemy" class="enemy-sprite" id="enemy-img">
+        </div>
+
+        <div class="gold-display">💰 Gold: <span id="gold-count">0</span></div>
+        <div class="dps-display">⚔️ DPS: <span id="dps-count">0</span></div>
+    </div>
+
+    <div class="shop-container">
+        <h2>🛠️ THE ARSENAL</h2>
+        <div class="shop-grid">
+            <div class="shop-item">
+                <div>
+                    <strong>Wooden Dagger</strong><br>
+                    <small>+1 DPS (Owned: <span id="count-w1">0</span>)</small>
+                </div>
+                <button class="shop-btn" id="btn-w1" onclick="buyWeapon(1, 15, 'count-w1', 'btn-w1')">Gold: 15</button>
+            </div>
+            <div class="shop-item">
+                <div>
+                    <strong>Iron Greatsword</strong><br>
+                    <small>+8 DPS (Owned: <span id="count-w2">0</span>)</small>
+                </div>
+                <button class="shop-btn" id="btn-w2" onclick="buyWeapon(8, 100, 'count-w2', 'btn-w2')">Gold: 100</button>
+            </div>
+            <div class="shop-item">
+                <div>
+                    <strong>Plasma Rifle</strong><br>
+                    <small>+50 DPS (Owned: <span id="count-w3">0</span>)</small>
+                </div>
+                <button class="shop-btn" id="btn-w3" onclick="buyWeapon(50, 600, 'count-w3', 'btn-w3')">Gold: 600</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
